@@ -25,10 +25,17 @@ import path from 'path';
     
     const URL = req.query.image_url
      //    1. validate the image_url query
+     if(!URL) {
+      return res.status(422).json({
+      status: 'error',
+      code: '422',
+      message: "Invalid Image URL, Image URL can not be empty"
+      })
+    }
     if(!validateUrl) {
-       return res.status(500).json({
+       return res.status(422).json({
        status: 'error',
-       code: '500',
+       code: '422',
        message: "Invalid Image"
      })
     }
