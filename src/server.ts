@@ -26,10 +26,22 @@ import path from 'path';
     const URL = req.query.image_url
      //    1. validate the image_url query
     if(validateUrl) {
+       return res.status(500).json({
+       status: 'error',
+       code: '500',
+       message: "Invalid Image"
+     })
+    }
       //    2. call filterImageFromURL(image_url) to filter the image
     try{
       const filtered = await filterImageFromURL(URL);
-      if (filtered) {
+      if (!filtered) {
+        res.status(404).json({
+          status: 'error',
+          code: '404',
+          message: 'filtered not found'
+        })
+      }
         //    3. send the resulting file in the response
         res.sendFile(filtered);
         const directoryPath = path.join(__dirname, '/util/tmp/');
@@ -45,27 +57,14 @@ import path from 'path';
           //    4. deletes any files on the server on finish of the response
           deleteLocalFiles(files);
         });
-      } else {
-        res.status(404).json({
-          status: 'failed',
-          code: '404',
-          message: 'filtered not found'
-        })
-      }
+      
     } catch (e) {
     return res.status(500).json({
       status: 'error',
       code: '500',
       message: e
     })
-    }
-  }else{
-    return res.status(500).json({
-      status: 'error',
-      code: '500',
-      message: "Invalid Image"
-    })
-  }
+    } 
   });
   // endpoint to filter an image from a public url.
   // IT SHOULD
