@@ -23,7 +23,7 @@ import path from 'path';
   // GET /filteredimage?image_url={{URL}}
   app.get( "/filteredimage", async ( req, res ) => {
     
-    const URL = req.query.image_url
+    const URL: string = req.query.image_url;
      //    1. validate the image_url query
      if(!URL) {
       return res.status(422).json({
